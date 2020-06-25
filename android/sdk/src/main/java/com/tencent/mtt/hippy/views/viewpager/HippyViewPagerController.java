@@ -117,6 +117,12 @@ public class HippyViewPagerController extends HippyViewController<HippyViewPager
 	{
 		pager.setOverflow(overflow);
 	}
+
+  @HippyControllerProps(name = "pageSize", defaultNumber = 1.f, defaultType = HippyControllerProps.NUMBER)
+  public void setPageSize(HippyViewPager pager, float pageSize) {
+    pager.getAdapter().setPageSize(pageSize);
+  }
+
 	@Override
 	public void dispatchFunction(HippyViewPager view, String functionName, HippyArray var)
 	{
