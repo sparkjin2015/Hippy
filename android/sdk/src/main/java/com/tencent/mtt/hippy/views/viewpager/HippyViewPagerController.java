@@ -123,6 +123,11 @@ public class HippyViewPagerController extends HippyViewController<HippyViewPager
     pager.getAdapter().setPageSize(pageSize);
   }
 
+  @HippyControllerProps(name = "loop", defaultBoolean = false, defaultType = HippyControllerProps.BOOLEAN)
+  public void loop(HippyViewPager pager, boolean loop) {
+    pager.getAdapter().setLoop(loop);
+  }
+
 	@Override
 	public void dispatchFunction(HippyViewPager view, String functionName, HippyArray var)
 	{
