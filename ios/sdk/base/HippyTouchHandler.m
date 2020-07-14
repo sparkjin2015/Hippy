@@ -211,6 +211,8 @@ typedef void(^ViewBlock)(UIView* view, BOOL* stop);
         if (clickView && clickView == _onClickView) {
             if (!_bLongClick) {
                 clickView.onClick(@{});
+                //QNHack for report
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"QNHippyViewClick" object:clickView];
             }
             [self clearTimer];
             [self clearLongClickTimer];
