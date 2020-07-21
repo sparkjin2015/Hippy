@@ -15,6 +15,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+  tasks.withType(Javadoc).all {
+    enabled false
+  }
 }
 
 afterEvaluate {
@@ -49,4 +53,29 @@ def unZipAar(file) {
         include 'classes.jar'
         rename 'classes.jar', 'support-ui.jar'
     }
+}
+
+Properties properties = new Properties()
+InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+properties.load( inputStream )
+
+def user = properties.getProperty('bintrayUser')
+def key = properties.getProperty('bintrayKey')
+def org = properties.getProperty('userOrg')
+def repo = properties.getProperty('repoName')
+def group = properties.getProperty('groupId')
+
+println("bintrayUpload: bintrayUser=" + user + ", bintrayKey=" + key)
+
+publish {
+  bintrayUser = user
+  bintrayKey = key
+  userOrg = org
+  repoName = repo
+  groupId = group
+  artifactId = 'hippy-support-ui'
+  publishVersion = '2.0.32'
+  dryRun = false
+  desc = 'Hippy library for Android'
+  website = 'https://github.com/QQNewsClient/Hippy.git'
 }

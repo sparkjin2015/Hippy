@@ -507,16 +507,20 @@ properties.load( inputStream )
 
 def user = properties.getProperty('bintrayUser')
 def key = properties.getProperty('bintrayKey')
+def org = properties.getProperty('userOrg')
+def repo = properties.getProperty('repoName')
+def group = properties.getProperty('groupId')
+
 println("bintrayUpload: bintrayUser=" + user + ", bintrayKey=" + key)
 publish {
   bintrayUser = user
   bintrayKey = key
-  userOrg = 'hippy'
-  repoName = 'Hippy'
-  groupId = 'com.tencent.hippy'
-  artifactId = 'hippy-release'
-  publishVersion = '2.0.3'
+  userOrg = org
+  repoName = repo
+  groupId = group
+  artifactId = 'hippy'
+  publishVersion = '2.0.32'
   dryRun = false
   desc = 'Hippy library for Android'
-  website = 'https://github.com/Tencent/Hippy'
+  website = 'https://github.com/QQNewsClient/Hippy.git'
 }
