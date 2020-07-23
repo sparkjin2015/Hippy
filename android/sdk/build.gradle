@@ -227,7 +227,8 @@ task address2Line(type: Exec) {
             address
 }
 
-task buildNdkLibs(dependsOn: (ISCI.toBoolean() ? dealNdkLibSymbols : stripSO)) {
+//task buildNdkLibs(dependsOn: (ISCI.toBoolean() ? dealNdkLibSymbols : stripSO)) {
+task buildNdkLibs( type: Copy) {
     copy {
         from "src/main/jni/third_party/v8/x86"
         into "$buildDir/jnilibs/x86/"
@@ -519,7 +520,7 @@ publish {
   repoName = repo
   groupId = group
   artifactId = 'hippy'
-  publishVersion = '2.0.32'
+  publishVersion = '2.0.33'
   dryRun = false
   desc = 'Hippy library for Android'
   website = 'https://github.com/QQNewsClient/Hippy.git'

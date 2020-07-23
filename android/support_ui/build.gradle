@@ -75,7 +75,7 @@ publish {
   repoName = repo
   groupId = group
   artifactId = 'hippy-support-ui'
-  publishVersion = '2.0.32'
+  publishVersion = '2.0.33'
   dryRun = false
   desc = 'Hippy library for Android'
   website = 'https://github.com/QQNewsClient/Hippy.git'
