@@ -473,12 +473,12 @@ public class AsyncImageView extends ViewGroup implements Animator.AnimatorListen
 			onSetContent(mUrl);
 			if (sourceType == SOURCE_TYPE_SRC && mSourceDrawable != null)
 			{
-				updateContentDrawableProperty();
+				updateContentDrawableProperty(mSourceDrawable.getBitmap());
 			}
 			else if (sourceType == SOURCE_TYPE_DEFAULT_SRC && mDefaultSourceDrawable != null
         && mSourceDrawable == null) // src未加载，才显示默认图；避免时序问题
 			{
-				((ContentDrawable) mContentDrawable).setBitmap(mDefaultSourceDrawable.getBitmap());
+			  updateContentDrawableProperty(mDefaultSourceDrawable.getBitmap());
 			}
 			if (mBGDrawable != null)
 			{
@@ -493,9 +493,9 @@ public class AsyncImageView extends ViewGroup implements Animator.AnimatorListen
 		}
 	}
 
-	protected void updateContentDrawableProperty()
+	protected void updateContentDrawableProperty(Bitmap bitmap)
 	{
-		((ContentDrawable) mContentDrawable).setBitmap(getBitmap());
+		((ContentDrawable) mContentDrawable).setBitmap(bitmap);
 		((ContentDrawable) mContentDrawable).setTintColor(getTintColor());
 		((ContentDrawable) mContentDrawable).setScaleType(mScaleType);
 		((ContentDrawable) mContentDrawable).setImagePositionX(mImagePositionX);

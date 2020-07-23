@@ -16,6 +16,7 @@
 package com.tencent.mtt.hippy.views.image;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Movie;
@@ -260,19 +261,29 @@ public class HippyImageView extends AsyncImageView implements CommonBorder, Hipp
 			{
 				((CommonBackgroundDrawable) oldBGDrawable).setBackgroundColor(defaultBackgroundColor);
 				setCustomBackgroundDrawable((CommonBackgroundDrawable) oldBGDrawable);
-			}
-			else if (oldBGDrawable instanceof LayerDrawable)
-			{
-				if (((LayerDrawable) oldBGDrawable).getNumberOfLayers() > 0)
-				{
-					Drawable lastBgDrawable = ((LayerDrawable) oldBGDrawable).getDrawable(0);
-					if (lastBgDrawable instanceof CommonBackgroundDrawable)
-					{
-						((CommonBackgroundDrawable) lastBgDrawable).setBackgroundColor(defaultBackgroundColor);
-						setCustomBackgroundDrawable((CommonBackgroundDrawable) lastBgDrawable);
-					}
-				}
-			}
+			} else if (oldBGDrawable instanceof LayerDrawable) {
+			  int layerNum = ((LayerDrawable) oldBGDrawable).getNumberOfLayers();
+        if (layerNum > 0) {
+          Drawable lastBgDrawable = ((LayerDrawable) oldBGDrawable).getDrawable(0);
+          if (lastBgDrawable instanceof CommonBackgroundDrawable) {
+            ((CommonBackgroundDrawable) lastBgDrawable).setBackgroundColor(defaultBackgroundColor);
+            setCustomBackgroundDrawable((CommonBackgroundDrawable) lastBgDrawable);
+          }
+        }
+        if (layerNum > 1) {
+          Drawable layer1Drawable = ((LayerDrawable) oldBGDrawable).getDrawable(1);
+          if (layer1Drawable instanceof HippyContentDrawable) {
+            HippyContentDrawable layer1 = (HippyContentDrawable) layer1Drawable;
+            if (mBGDrawable != null) {
+              layer1.setBorder(mBGDrawable.getBorderRadiusArray(), mBGDrawable.getBorderWidthArray());
+              setBackgroundDrawable(new LayerDrawable(new Drawable[]{mBGDrawable, layer1}));
+            } else {
+              setBackgroundDrawable(layer1Drawable);
+            }
+          }
+        }
+      }
+
 			super.setBackgroundColor(defaultBackgroundColor);
 			mHasSetTempBackgroundColor = true;
 		}
@@ -296,9 +307,9 @@ public class HippyImageView extends AsyncImageView implements CommonBorder, Hipp
 	}
 
 	@Override
-	protected void updateContentDrawableProperty()
+	protected void updateContentDrawableProperty(Bitmap bitmap)
 	{
-		super.updateContentDrawableProperty();
+		super.updateContentDrawableProperty(bitmap);
 		((HippyContentDrawable) mContentDrawable).setNinePatchCoordinate(mNinePatchRect);
 	}
 
@@ -457,7 +468,7 @@ public class HippyImageView extends AsyncImageView implements CommonBorder, Hipp
 		if (duration == 0) {
 			duration = 1000;
 		}
-		
+
 		long now = System.currentTimeMillis();
 
 		if (!isGifPaused)
@@ -528,19 +539,19 @@ public class HippyImageView extends AsyncImageView implements CommonBorder, Hipp
 	}
 
 	private boolean isGifPaused = false;
-	
+
 	public void startPlay()
 	{
 		isGifPaused = false;
 		invalidate();
 	}
-	
+
 	public void pause()
 	{
 		isGifPaused = true;
 		mGifLastPlayTime = -1;
 	}
-	
+
 
 	private OnLoadEvent getOnLoadEvent()
 	{
