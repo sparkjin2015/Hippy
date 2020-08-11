@@ -68,7 +68,7 @@ void ConsoleModule::Log(const napi::CallbackInfo& info) {
   std::string str = EscapeMessage(message);
   const char* log_msg = str.c_str();
   if (info.Length() == 1) {
-    HIPPY_LOG(hippy::Debug, log_msg);
+    //HIPPY_LOG(hippy::Debug, log_msg);
   } else {
     std::string type;
     if (!napi::napi_get_value_string(context, info[1], &type) || type.empty()) {
@@ -86,7 +86,7 @@ void ConsoleModule::Log(const napi::CallbackInfo& info) {
     else if (type.compare("fatal") == 0)
       HIPPY_LOG(hippy::Fatal, log_msg);
     else
-      HIPPY_LOG(hippy::Debug, log_msg);
+      //HIPPY_LOG(hippy::Debug, log_msg);
   }
 
   info.GetReturnValue()->SetUndefined();
