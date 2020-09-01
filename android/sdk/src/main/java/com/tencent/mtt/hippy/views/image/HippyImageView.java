@@ -105,6 +105,8 @@ public class HippyImageView extends AsyncImageView implements CommonBorder, Hipp
 	{
 		//先解决图片绘制黑屏的问题。 更完全的改法是调用resetProps.
 		mTintColor = 0;
+    //解决复用view时图片未重置的问题
+    mSourceDrawable = null;
 	}
 
 	enum ImageEvent
