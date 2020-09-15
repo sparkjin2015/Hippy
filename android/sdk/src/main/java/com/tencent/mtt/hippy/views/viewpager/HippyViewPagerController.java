@@ -15,6 +15,10 @@
  */
 package com.tencent.mtt.hippy.views.viewpager;
 
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.tencent.mtt.hippy.annotation.HippyController;
 import com.tencent.mtt.hippy.annotation.HippyControllerProps;
 import com.tencent.mtt.hippy.common.HippyArray;
@@ -22,10 +26,6 @@ import com.tencent.mtt.hippy.dom.node.NodeProps;
 import com.tencent.mtt.hippy.uimanager.HippyViewController;
 import com.tencent.mtt.hippy.utils.LogUtils;
 import com.tencent.mtt.hippy.utils.PixelUtil;
-
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 
 
 /**
@@ -126,6 +126,11 @@ public class HippyViewPagerController extends HippyViewController<HippyViewPager
   @HippyControllerProps(name = "loop", defaultBoolean = false, defaultType = HippyControllerProps.BOOLEAN)
   public void loop(HippyViewPager pager, boolean loop) {
     pager.getAdapter().setLoop(loop);
+  }
+
+  @HippyControllerProps(name = "middleSidesPadding", defaultNumber = 1.f, defaultType = HippyControllerProps.NUMBER)
+  public void setMiddleSidesPadding(HippyViewPager pager, float middleSidesPadding) {
+    pager.middleSidesPadding = middleSidesPadding;
   }
 
 	@Override
