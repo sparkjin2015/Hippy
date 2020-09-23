@@ -158,6 +158,10 @@ public class MyActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
+    if (mHippyEngine == null) {
+      super.onDestroy();
+      return;
+    }
 		// 3/3. 摧毁hippy前端模块，摧毁hippy引擎
 		mHippyEngine.destroyModule(mHippyView);
 		mHippyEngine.destroyEngine();
@@ -166,6 +170,11 @@ public class MyActivity extends Activity
 
 	@Override
 	public void onBackPressed() {
+    if (mHippyEngine == null) {
+      super.onBackPressed();
+      return;
+    }
+
 		// 可选：让hippy前端能够监听并拦截back事件
 		boolean handled = mHippyEngine.onBackPressed(new HippyEngine.BackPressHandler() {
 			@Override
