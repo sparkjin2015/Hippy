@@ -122,10 +122,15 @@ public class HippyWormholeManager implements HippyWormholeProxy {
         return;
       }
 
-      ViewGroup oldParent = (ViewGroup)(wormholeView.getParent());
+      ViewGroup oldParent = (ViewGroup) (wormholeView.getParent());
       if (oldParent != newParent) {
         oldParent.removeView(wormholeView);
         newParent.addView(wormholeView);
+      } else {
+        if (newParent.indexOfChild(wormholeView) != newParent.getChildCount() - 1) {
+          newParent.removeView(wormholeView);
+          newParent.addView(wormholeView);
+        }
       }
 
       float width = node.getWidth();
@@ -150,13 +155,13 @@ public class HippyWormholeManager implements HippyWormholeProxy {
   }
 
   @Override
-  public void createWormhole(HippyMap initProps, ViewGroup parent) {
+  public String createWormhole(HippyMap initProps, ViewGroup parent) {
     if (mWormholeEngine == null) {
-      return;
+      return null;
     }
 
     if (initProps == null || parent == null) {
-      return;
+      return null;
     }
 
     String wormholeId = getWormholeId();
@@ -164,8 +169,11 @@ public class HippyWormholeManager implements HippyWormholeProxy {
       if (!mTkdWormholeMap.containsValue(parent)) {
         mTkdWormholeMap.put(wormholeId, parent);
       }
-      sendDataReceivedMessageToServer(wormholeId,initProps);
+      sendDataReceivedMessageToServer(wormholeId, initProps);
+      return wormholeId;
     }
+
+    return null;
   }
 
   public void registerClientEngine(HippyEngine hippyEngine) {
