@@ -29,6 +29,7 @@
 #import "HippyInvalidating.h"
 #import "HippyImageViewCustomLoader.h"
 #import "HippyCustomTouchHandlerProtocol.h"
+#import "HippyWormholeProtocol.h"
 
 @class JSValue;
 @class HippyBridge;
@@ -121,6 +122,12 @@ HIPPY_EXTERN NSString *HippyBridgeModuleNameForClass(Class bridgeModuleClass);
                    moduleProvider:(HippyBridgeModuleProviderBlock)block
                     launchOptions:(NSDictionary *)launchOptions;
 
+- (instancetype)initWithDelegate:(id<HippyBridgeDelegate>)delegate
+                       bundleURL:(NSURL *)bundleURL
+                  moduleProvider:(HippyBridgeModuleProviderBlock)block
+                   launchOptions:(NSDictionary *)launchOptions
+                     executorKey:(NSString *)executorKey NS_DESIGNATED_INITIALIZER;
+
 /**
  * This method is used to call functions in the JavaScript application context.
  * It is primarily intended for use by modules that require two-way communication
@@ -200,6 +207,9 @@ HIPPY_EXTERN NSString *HippyBridgeModuleNameForClass(Class bridgeModuleClass);
  */
 @property (nonatomic, weak, readonly) id<HippyBridgeDelegate> delegate;
 
+@property (nonatomic, weak) id<HippyWormholeDataSource> wormholeDataSource;
+@property (nonatomic, weak) id<HippyWormholeDelegate> wormholeDelegate;
+
 @property (nonatomic, weak, readonly) HippyExtAnimationModule *animationModule;
 
 @property (nonatomic, strong, readonly) id <HippyImageViewCustomLoader> imageLoader;
@@ -257,5 +267,11 @@ HIPPY_EXTERN NSString *HippyBridgeModuleNameForClass(Class bridgeModuleClass);
  */
 - (void)bindKeys;
 
+
+@end
+
+@interface UIView(Bridge)
+
+@property(nonatomic, weak) HippyBridge *bridge;
 
 @end

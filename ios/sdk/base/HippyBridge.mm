@@ -194,8 +194,19 @@ static HippyBridge *HippyCurrentBridgeInstance = nil;
 - (instancetype)initWithDelegate:(id<HippyBridgeDelegate>)delegate
                        bundleURL:(NSURL *)bundleURL
                   moduleProvider:(HippyBridgeModuleProviderBlock)block
+                   launchOptions:(NSDictionary *)launchOptions {
+    return [self initWithDelegate:delegate
+                        bundleURL:bundleURL
+                   moduleProvider:block
+                    launchOptions:launchOptions
+                      executorKey:nil];
+}
+
+- (instancetype)initWithDelegate:(id<HippyBridgeDelegate>)delegate
+                       bundleURL:(NSURL *)bundleURL
+                  moduleProvider:(HippyBridgeModuleProviderBlock)block
                    launchOptions:(NSDictionary *)launchOptions
-{
+                     executorKey:(NSString *)executorKey {
     if (self = [super init]) {
         _delegate = delegate;
         _bundleURL = bundleURL;
@@ -203,6 +214,7 @@ static HippyBridge *HippyCurrentBridgeInstance = nil;
         _debugMode = [launchOptions[@"DebugMode"] boolValue];
         _shareOptions = [NSMutableDictionary new];
         _appVerson = @"";
+        _executorKey = executorKey;
         [self setUp];
 
         HippyExecuteOnMainQueue(^{ [self bindKeys]; });
@@ -355,9 +367,21 @@ HIPPY_NOT_IMPLEMENTED(- (instancetype)init)
 #endif
 }
 
+- (void)setWormholeDelegate:(id<HippyWormholeDelegate>)wormholeDelegate {
+    _wormholeDelegate = wormholeDelegate;
+    self.batchedBridge.wormholeDelegate = wormholeDelegate;
+}
+
+- (void)setWormholeDataSource:(id<HippyWormholeDataSource>)wormholeDataSource {
+    _wormholeDataSource = wormholeDataSource;
+    self.batchedBridge.wormholeDataSource = wormholeDataSource;
+}
+
 - (void)createBatchedBridge
 {
     self.batchedBridge = [[HippyBatchedBridge alloc] initWithParentBridge:self];
+    self.batchedBridge.wormholeDelegate = self.wormholeDelegate;
+    self.batchedBridge.wormholeDataSource = self.wormholeDataSource;
 }
 
 - (BOOL)isLoading
@@ -417,5 +441,25 @@ HIPPY_NOT_IMPLEMENTED(- (instancetype)init)
     return [self.batchedBridge callFunctionOnModule:module method:method arguments:arguments error:error];
 }
 
+
+@end
+
+@implementation UIView(Bridge)
+
+#define kBridgeKey @"bridgeKey"
+
+- (void)setBridge:(HippyBridge *)bridge {
+    if (bridge) {
+        NSMapTable *mapTable = [NSMapTable strongToWeakObjectsMapTable];
+        [mapTable setObject:bridge forKey:kBridgeKey];
+        objc_setAssociatedObject(self, @selector(bridge), mapTable, OBJC_ASSOCIATION_RETAIN);
+    }
+}
+
+- (HippyBridge *)bridge {
+    NSMapTable *mapTable = objc_getAssociatedObject(self, _cmd);
+    HippyBridge *bridge = [mapTable objectForKey:kBridgeKey];
+    return bridge;
+}
 
 @end

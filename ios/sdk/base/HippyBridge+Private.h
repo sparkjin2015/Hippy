@@ -38,6 +38,7 @@ HIPPY_EXTERN void HippyVerifyAllModulesExported(NSArray *extraModules);
 @property (nonatomic, assign) int64_t flowID;
 @property (nonatomic, assign) CFMutableDictionaryRef flowIDMap;
 @property (nonatomic, strong) NSLock *flowIDMapLock;
+@property (nonatomic, copy) NSString *executorKey;
 
 + (instancetype)currentBridge;
 + (void)setCurrentBridge:(HippyBridge *)bridge;
@@ -118,6 +119,7 @@ HIPPY_EXTERN void HippyVerifyAllModulesExported(NSArray *extraModules);
  */
 - (void)handleBuffer:(NSArray<NSArray *> *)buffer batchEnded:(BOOL)hasEnded;
 - (void)processResponse:(id)json error:(NSError *)error;
+- (NSDictionary *)deviceInfoDic;
 
 /**
  * Synchronously call a specific native module's method and return the result
