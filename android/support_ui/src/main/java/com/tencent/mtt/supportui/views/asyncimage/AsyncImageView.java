@@ -235,7 +235,7 @@ public class AsyncImageView extends ViewGroup implements Animator.AnimatorListen
 
 	}
 
-	protected boolean shouldFetchImage()
+	protected boolean shouldFetchImage(String url, final int sourceType)
 	{
 		return true;
 	}
@@ -262,7 +262,7 @@ public class AsyncImageView extends ViewGroup implements Animator.AnimatorListen
 			if (shouldUseFetchImageMode(url))
 			{
 				url = url.trim().replaceAll(" ", "%20");
-				if (!shouldFetchImage())
+				if (!shouldFetchImage(url, sourceType))
 				{
 					return;
 				}
@@ -276,7 +276,10 @@ public class AsyncImageView extends ViewGroup implements Animator.AnimatorListen
 				// eg. <Image source={require('./abc.png')} />
 				// eg. <Image source={{uri: 'icon'}} />
 				// eg. <Image source={{uri: 'data:image/png;base64,iVBORTJRU5Erk=='}} />
-
+        if (!shouldFetchImage(url, sourceType))
+        {
+          return;
+        }
 				handleGetImageStart();
 				handleImageRequest(mImageAdapter.getImage(url, null), sourceType, null);
 			}
